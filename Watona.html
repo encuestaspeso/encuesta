@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            height: 100vh;
+        }
+
+        h2 {
+            font-size: 3vw;
+            margin-top: 5vh;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 5vh;
+            gap: 3vw;
+            position: relative;
+        }
+
+        video {
+            width: 40vw;  
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #video {
+            display: none;
+        }
+
+        .rotating {
+            width: 10vw;
+            height: 10vw;
+            transition: transform 0.3s;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spin-animation {
+            animation: spin 2s linear infinite;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 3vh;
+            border-radius: 10px;
+            text-align: center;
+            width: 50%;
+            max-width: 600px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 2vh 4vw;
+            margin-top: 3vh;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-blue {
+            background-color: blue;
+        }
+
+        @media (max-width: 1920px) {
+            video {
+                width: 50vw; 
+            }
+
+            .rotating {
+                width: 12vw;
+                height: 12vw;
+            }
+
+            h2 {
+                font-size: 3vw;
+            }
+
+            .modal-content {
+                width: 60%;
+                padding: 3vh;
+            }
+
+            .close-btn {
+                padding: 3vh 6vw;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Ingrese su Género y Peso</h2>
+
+    <label>Género:</label>
+    <select id="genero">
+        <option value="masculino">Masculino</option>
+        <option value="femenino">Femenino</option>
+    </select>
+
+    <br><br>
+
+    <label>Peso (kg):</label>
+    <input type="number" id="peso">
+
+    <br><br>
+
+    <button onclick="verificarPeso()">Verificar</button>
+
+    <p id="mensaje"></p>
+
+    <div id="video">
+        <div class="video-container">
+            <img id="img1" class="rotating" src="" alt="Imagen Izquierda">
+            <video id="videoPlayer" controls autoplay playsinline>
+                <source id="videoSource" src="" type="video/mp4">
+                Tu navegador no soporta el elemento de video.
+            </video>
+            <img id="img2" class="rotating" src="" alt="Imagen Derecha">
+        </div>
+    </div>
+
+    <div id="modal-watona" class="modal">
+        <div class="modal-content">
+            <h2 id="mensaje-watona"></h2>
+            <button class="close-btn" onclick="cerrarModal('modal-watona')">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="modal-fit" class="modal">
+        <div class="modal-content modal-blue">
+            <h2 id="mensaje-fit"></h2>
+            <button class="close-btn" onclick="cerrarModal('modal-fit')">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        function verificarPeso() {
+            var peso = parseFloat(document.getElementById("peso").value);
+            var genero = document.getElementById("genero").value;
+            var mensaje = document.getElementById("mensaje");
+            var video = document.getElementById("video");
+            var videoSource = document.getElementById("videoSource");
+            var videoPlayer = document.getElementById("videoPlayer");
+            var img1 = document.getElementById("img1");
+            var img2 = document.getElementById("img2");
+            var mensajeWatona = "";
+            var mensajeFit = "";
+            var videoFit = "";
+            var videoWaton = "";
+            var imgFit = "";
+            var imgWaton = "";
+
+            if (!peso || peso <= 0) {
+                mensaje.textContent = "Por favor, ingrese un peso válido.";
+                video.style.display = "none";
+                return;
+            }
+
+            if (genero === "masculino") {
+                videoFit = "https://i.imgur.com/ca1IYJl.mp4";
+                videoWaton = "https://i.imgur.com/gGlkfYi.mp4";
+                imgFit = "https://i.imgur.com/65JuVOx.png";
+                imgWaton = "https://i.imgur.com/Fb63Oq1.png";
+                mensajeWatona = "🚨 ¡Waton detectado! 🚨";
+                mensajeFit = "🎉 ¡No eres waton! 🎉";
+            } else {
+                videoFit = "https://i.imgur.com/QZOuuVy.mp4";
+                videoWaton = "https://i.imgur.com/CTAmtgz.mp4";
+                imgFit = "https://i.imgur.com/ehF8g4n.png";
+                imgWaton = "https://i.imgur.com/sY0XbHo.png";
+                mensajeWatona = "🚨 ¡Eres una Watoncita! 🚨";
+                mensajeFit = "🎉 ¡No eres watona! 🎉";
+            }
+
+            if (peso > 80) {
+                document.getElementById("modal-watona").style.display = "flex";
+                document.getElementById("mensaje-watona").textContent = mensajeWatona;
+                mensaje.textContent = mensajeWatona;
+                video.style.display = "block";
+                videoSource.src = videoWaton;
+                videoPlayer.load();
+                img1.src = imgWaton;
+                img2.src = imgWaton;
+                img1.classList.add("spin-animation");
+                img2.classList.add("spin-animation");
+            } else {
+                document.getElementById("modal-fit").style.display = "flex";
+                document.getElementById("mensaje-fit").textContent = mensajeFit;
+                mensaje.textContent = mensajeFit;
+                video.style.display = "block";
+                videoSource.src = videoFit;
+                videoPlayer.load();
+                img1.src = imgFit;
+                img2.src = imgFit;
+                img1.classList.remove("spin-animation");
+                img2.classList.remove("spin-animation");
+            }
+        }
+
+        function cerrarModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
